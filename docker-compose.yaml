@@ -6,11 +6,12 @@ networks:
 services:
   api:
     image: craftconnect/dev
+    env_file: .env
     build:
       context: .
       dockerfile: dev.dockerfile
     working_dir: /app
-    command: yarn start
+    command: yarn start:dev
     volumes:
       - ./src:/app/src:ro
       - ./nest-cli.json:/app/nest-cli.json:ro
