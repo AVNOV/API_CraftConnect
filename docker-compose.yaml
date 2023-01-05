@@ -1,0 +1,53 @@
+version: '3'
+
+networks:
+  database:
+
+services:
+  api:
+    image: craftconnect/dev
+    env_file: .env
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    working_dir: /app
+    command: yarn start:dev
+    volumes:
+      - ./src:/app/src:ro
+      - ./nest-cli.json:/app/nest-cli.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./tsconfig.build.json:/app/tsconfig.build.json:ro
+      - ./package.json:/app/package.json:ro
+      - ./yarn.lock:/app/yarn.lock:ro
+      - ./node_modules:/app/node_modules:ro
+      
+    environment:
+      - PORT=${APP_PORT}
+      - DB_HOST=db
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_NAME=${POSTGRES_DB}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      - database
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    networks:
+      - database
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
