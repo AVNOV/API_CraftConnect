@@ -22,8 +22,10 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User | null> {
-    const user = await this.user.findOne({ where: { id } });
-    return user;
+    return await this.user.findOne({
+      where: { id },
+      relations: ['artisan'],
+    });
   }
 
   async update(id: number, user: User): Promise<UpdateResult> {
