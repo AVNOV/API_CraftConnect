@@ -1,5 +1,6 @@
-FROM node:18-alpine
-
+FROM node:19-alpine
 WORKDIR /app
-
-RUN yarn install 
+COPY package*.json ./
+RUN yarn
+COPY . .
+RUN yarn run build
