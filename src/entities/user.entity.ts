@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Artisan } from './artisan.entity';
 
 @Entity()
 export class User {
@@ -30,6 +37,11 @@ export class User {
   @Column()
   @ApiProperty()
   password: string;
+
+  @ApiProperty()
+  @OneToOne(() => Artisan)
+  @JoinColumn()
+  artisan: Artisan;
 
   @Column({
     type: 'timestamp',
