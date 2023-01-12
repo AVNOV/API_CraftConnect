@@ -8,23 +8,27 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/services/user.service';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CreateUserDto } from 'src/dto/CreateUserDto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   @ApiCreatedResponse({ description: "L'utilisateur a été créé avec succès." })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async create(@Body() user: User): Promise<string> {
+  async create(@Body() user: CreateUserDto): Promise<string> {
     try {
       await this.userService.create(user);
 
@@ -43,18 +47,24 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiAcceptedResponse({ isArray: true, type: User })
   async findAll(): Promise<User[]> {
     return await this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   @ApiAcceptedResponse({ type: User })
   async findOne(@Param('id') id: number): Promise<User | null> {
     return await this.userService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiAcceptedResponse({
     description: "L'utilisateur a été mis à jour avec succès.",
@@ -73,6 +83,8 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiAcceptedResponse({
     description: "L'utilisateur a été supprimé avec succès.",

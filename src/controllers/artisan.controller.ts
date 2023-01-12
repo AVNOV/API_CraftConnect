@@ -8,16 +8,19 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Artisan } from 'src/entities/artisan.entity';
 import { ArtisanService } from 'src/services/artisan.service';
 
-@Controller('artisan')
+@Controller('artisans')
 export class ArtisanController {
   constructor(private readonly artisanService: ArtisanService) {}
 
@@ -37,18 +40,24 @@ export class ArtisanController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiAcceptedResponse({ isArray: true, type: Artisan })
   async findAll(): Promise<Artisan[]> {
     return await this.artisanService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('id')
   @ApiAcceptedResponse({ type: Artisan })
   async findOne(@Param('id') id: number): Promise<Artisan | null> {
     return await this.artisanService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiAcceptedResponse({
     description: "L'artisan a été mis à jour avec succès.",
@@ -70,6 +79,8 @@ export class ArtisanController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiAcceptedResponse({
     description: "L'artisan a été supprimé avec succès.",
