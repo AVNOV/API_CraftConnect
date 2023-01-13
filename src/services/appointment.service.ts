@@ -24,8 +24,8 @@ export class AppointmentService {
         return await this.appointment.findOne({ where: { id } });
     }
     
-    async update(id: number, artisan: Appointment): Promise<UpdateResult> {
-        return await this.appointment.update(id, artisan);
+    async update(id: number, appointment: Appointment): Promise<UpdateResult> {
+        return await this.appointment.update(id, appointment);
     }
     
     async delete(id: number): Promise<DeleteResult> {

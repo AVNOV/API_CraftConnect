@@ -12,12 +12,12 @@ export class Appointment {
     @ApiProperty()
     @OneToOne(() => User)
     @JoinColumn()
-    client_id: User;
+    client: User;
 
     @ApiProperty()
     @OneToOne(() => Artisan)
     @JoinColumn()
-    artisan_id: Artisan;
+    artisan: Artisan;
 
     @Column()
     @ApiProperty()
@@ -34,4 +34,12 @@ export class Appointment {
     @Column()
     @ApiProperty()
     status: Enumerator;
+
+    @Column()
+    @ApiProperty()
+    description: string;
+
+    @Column()
+    @ApiProperty()
+    reason: string;
 }
