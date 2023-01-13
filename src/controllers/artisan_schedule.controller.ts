@@ -58,7 +58,7 @@ export class ArtisanScheduleController {
     return await this.artisanScheduleService.findAll();
   }
 
-  @Get('id')
+  @Get(':id')
   @ApiAcceptedResponse({ type: ArtisanSchedule })
   async findOne(@Param('id') id: number): Promise<ArtisanSchedule | null> {
     return await this.artisanScheduleService.findOne(id);
