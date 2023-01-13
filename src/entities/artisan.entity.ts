@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ArtisanSchedule } from './artisan_schedule.entity';
 
 @Entity()
 export class Artisan {
@@ -11,5 +18,8 @@ export class Artisan {
   @ApiProperty()
   company_name: string;
 
-  //@OneToOne(() => artisan_schedule)
+  @ApiProperty()
+  @OneToOne(() => ArtisanSchedule)
+  @JoinColumn()
+  artisanSchedule: ArtisanSchedule;
 }

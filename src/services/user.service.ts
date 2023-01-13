@@ -4,6 +4,7 @@ import { User } from 'src/entities/user.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/dto/CreateUserDto';
+import { UpdateUserDto } from 'src/dto/UpdateUserDto';
 
 @Injectable()
 export class UserService {
@@ -30,11 +31,14 @@ export class UserService {
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const user = await this.user.findOneBy({ email });
+    const user = await this.user.findOne({
+      where: { email },
+      relations: ['artisan'],
+    });
     return user;
   }
 
-  async update(id: number, user: User): Promise<UpdateResult> {
+  async update(id: number, user: UpdateUserDto): Promise<UpdateResult> {
     return await this.user.update(id, user);
   }
 
