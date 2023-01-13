@@ -30,11 +30,16 @@ export class ArtisanController {
   @Post()
   @ApiCreatedResponse({ description: "L'artisan a été créé avec succès." })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async create(@Body() artisan: CreateArtisanDto): Promise<string> {
+  async create(
+    @Body() artisan: CreateArtisanDto,
+  ): Promise<{ message: string; artisan: Artisan }> {
     try {
-      await this.artisanService.create(artisan);
+      const newArtisan = await this.artisanService.create(artisan);
 
-      return "L'artisan a été créé avec succès.";
+      return {
+        message: "L'artisan a été créé avec succès.",
+        artisan: newArtisan,
+      };
     } catch (error) {
       throw new HttpException(
         "Une erreur s'est produite.",
