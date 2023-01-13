@@ -19,6 +19,7 @@ async function bootstrap() {
       forbidUnknownValues: false,
     }),
   );
+  app.enableCors();
   await app.listen(process.env.APP_PORT);
 }
 bootstrap();
