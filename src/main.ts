@@ -10,7 +10,7 @@ async function bootstrap() {
     .addTag('craftconnect')
     .addBearerAuth()
     .build();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
