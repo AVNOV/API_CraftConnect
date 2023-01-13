@@ -29,11 +29,16 @@ export class UserController {
   @Post()
   @ApiCreatedResponse({ description: "L'utilisateur a été créé avec succès." })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async create(@Body() user: CreateUserDto): Promise<string> {
+  async create(
+    @Body() user: CreateUserDto,
+  ): Promise<{ message: string; user: User }> {
     try {
-      await this.userService.create(user);
+      const newUser = await this.userService.create(user);
 
-      return "L'utilisateur a été créé avec succès.";
+      return {
+        message: "L'utilisateur a été mis à jour avec succès.",
+        user: newUser,
+      };
     } catch (error) {
       if (error?.code === '23505') {
         throw new HttpException(

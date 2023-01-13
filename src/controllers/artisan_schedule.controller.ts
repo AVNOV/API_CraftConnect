@@ -33,11 +33,16 @@ export class ArtisanScheduleController {
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
   async create(
     @Body() artisanSchedule: CreateArtisanScheduleDto,
-  ): Promise<string> {
+  ): Promise<{ message: string; artisan_schedule: ArtisanSchedule }> {
     try {
-      await this.artisanScheduleService.create(artisanSchedule);
+      const newSchedule = await this.artisanScheduleService.create(
+        artisanSchedule,
+      );
 
-      return 'Le planning a été créé avec succès.';
+      return {
+        message: 'Le planning a été créé avec succès.',
+        artisan_schedule: newSchedule,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(
