@@ -44,7 +44,6 @@ export class ArtisanScheduleController {
         artisan_schedule: newSchedule,
       };
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         "Une erreur s'est produite.",
         HttpStatus.INTERNAL_SERVER_ERROR,
