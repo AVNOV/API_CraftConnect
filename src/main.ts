@@ -6,7 +6,6 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('CraftConnect')
-    .setDescription('')
     .setVersion('0.1')
     .addTag('craftconnect')
     .addBearerAuth()
@@ -15,7 +14,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      forbidUnknownValues: false,
+    }),
+  );
   await app.listen(process.env.APP_PORT);
 }
 bootstrap();

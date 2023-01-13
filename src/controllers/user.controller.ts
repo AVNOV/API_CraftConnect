@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from 'src/dto/CreateUserDto';
+import { UpdateUserDto } from 'src/dto/UpdateUserDto';
 
 @Controller('users')
 export class UserController {
@@ -70,7 +71,10 @@ export class UserController {
     description: "L'utilisateur a été mis à jour avec succès.",
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async update(@Param('id') id: string, @Body() user: User): Promise<string> {
+  async update(
+    @Param('id') id: string,
+    @Body() user: UpdateUserDto,
+  ): Promise<string> {
     try {
       await this.userService.update(parseInt(id), user);
 

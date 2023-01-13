@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
@@ -17,6 +18,8 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CreateArtisanDto } from 'src/dto/CreateArtisanDto';
+import { UpdateArtisanDto } from 'src/dto/UpdateArtisanDto';
 import { Artisan } from 'src/entities/artisan.entity';
 import { ArtisanService } from 'src/services/artisan.service';
 
@@ -27,7 +30,7 @@ export class ArtisanController {
   @Post()
   @ApiCreatedResponse({ description: "L'artisan a été créé avec succès." })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async create(@Body() artisan: Artisan): Promise<string> {
+  async create(@Body() artisan: CreateArtisanDto): Promise<string> {
     try {
       await this.artisanService.create(artisan);
 
@@ -40,16 +43,12 @@ export class ArtisanController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get()
   @ApiAcceptedResponse({ isArray: true, type: Artisan })
   async findAll(): Promise<Artisan[]> {
     return await this.artisanService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get('id')
   @ApiAcceptedResponse({ type: Artisan })
   async findOne(@Param('id') id: number): Promise<Artisan | null> {
@@ -65,8 +64,14 @@ export class ArtisanController {
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
   async update(
     @Param('id') id: string,
-    @Body() artisan: Artisan,
+    @Body() artisan: UpdateArtisanDto,
+    @Request() req: any,
   ): Promise<string> {
+    if (req.user.artisanId !== parseInt(id))
+      throw new HttpException(
+        "Vous n'avez pas le droit de faire ça.",
+        HttpStatus.FORBIDDEN,
+      );
     try {
       await this.artisanService.update(parseInt(id), artisan);
 
