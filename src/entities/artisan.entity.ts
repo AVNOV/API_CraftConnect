@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ArtisanSchedule } from './artisan_schedule.entity';
+import { ArtisanSkill } from './artisan_skill.entity';
 
 @Entity()
 export class Artisan {
@@ -22,4 +23,9 @@ export class Artisan {
   @OneToOne(() => ArtisanSchedule)
   @JoinColumn()
   artisanSchedule: ArtisanSchedule;
+
+  @ApiProperty()
+  @OneToOne(() => ArtisanSkill)
+  @JoinColumn()
+  artisanSkill: ArtisanSkill;
 }

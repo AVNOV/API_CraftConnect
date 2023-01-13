@@ -9,6 +9,8 @@ import { ArtisanModule } from './modules/artisan.module';
 import { AuthModule } from './auth/modules/auth.module';
 import { ArtisanSchedule } from './entities/artisan_schedule.entity';
 import { ArtisanScheduleModule } from './modules/artisan_schedule.module';
+import { ArtisanSkill } from './entities/artisan_skill.entity';
+import { ArtisanSkillModule } from './modules/artisan_skill.module';
 
 @Module({
   imports: [
@@ -20,13 +22,14 @@ import { ArtisanScheduleModule } from './modules/artisan_schedule.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Artisan, ArtisanSchedule],
+      entities: [User, Artisan, ArtisanSchedule, ArtisanSkill],
       synchronize: true,
     }),
     UserModule,
     ArtisanModule,
     AuthModule,
     ArtisanScheduleModule,
+    ArtisanSkillModule,
   ],
   controllers: [AppController],
   providers: [],
