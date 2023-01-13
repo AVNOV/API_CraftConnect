@@ -19,13 +19,15 @@ export class ArtisanService {
   }
 
   async findAll(): Promise<Artisan[]> {
-    return await this.artisan.find();
+    return await this.artisan.find({
+      relations: ['artisanSchedule', 'artisanSkill'],
+    });
   }
 
   async findOne(id: number): Promise<Artisan | null> {
     return await this.artisan.findOne({
       where: { id },
-      relations: ['artisanSchedule'],
+      relations: ['artisanSchedule', 'artisanSkill'],
     });
   }
 
