@@ -18,6 +18,7 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Role } from 'src/auth/roles.enum';
 import { CreateArtisanDto } from 'src/dto/CreateArtisanDto';
 import { UpdateArtisanDto } from 'src/dto/UpdateArtisanDto';
 import { Artisan } from 'src/entities/artisan.entity';
@@ -72,7 +73,7 @@ export class ArtisanController {
     @Body() artisan: UpdateArtisanDto,
     @Request() req: any,
   ): Promise<string> {
-    if (req.user.artisanId !== parseInt(id))
+    if (req.user.artisanId !== parseInt(id) && req.user.role === Role.User)
       throw new HttpException(
         "Vous n'avez pas le droit de faire ça.",
         HttpStatus.FORBIDDEN,
@@ -96,7 +97,13 @@ export class ArtisanController {
     description: "L'artisan a été supprimé avec succès.",
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async delete(@Param('id') id: number): Promise<string> {
+  async delete(@Param('id') id: number, @Request() req: any): Promise<string> {
+    if (req.user.artisanId !== id && req.user.role === Role.User) {
+      throw new HttpException(
+        "Vous n'avez pas le droit de faire ça.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
     try {
       await this.artisanService.delete(id);
 

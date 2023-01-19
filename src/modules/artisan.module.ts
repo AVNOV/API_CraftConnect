@@ -8,5 +8,6 @@ import { ArtisanService } from 'src/services/artisan.service';
   imports: [TypeOrmModule.forFeature([Artisan])],
   providers: [ArtisanService],
   controllers: [ArtisanController],
+  exports: [ArtisanService],
 })
 export class ArtisanModule {}

@@ -6,12 +6,18 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/roles.enum';
 import { ArtisanSkill } from 'src/entities/artisan_skill.entity';
 import { ArtisanSkillService } from 'src/services/artisan_skill.service';
 
@@ -19,6 +25,9 @@ import { ArtisanSkillService } from 'src/services/artisan_skill.service';
 export class ArtisanSkillController {
   constructor(private readonly artisanSkillService: ArtisanSkillService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
   @Post()
   @ApiCreatedResponse({
     description: "Le type d'artisan a été créé avec succès.",

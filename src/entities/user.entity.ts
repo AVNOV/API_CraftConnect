@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Artisan } from './artisan.entity';
+import { Role } from 'src/auth/roles.enum';
 
 @Entity()
 export class User {
@@ -37,6 +38,10 @@ export class User {
   @Column()
   @ApiProperty()
   password: string;
+
+  @Column({ default: Role.User })
+  @ApiProperty()
+  role: string;
 
   @ApiProperty()
   @OneToOne(() => Artisan)

@@ -35,6 +35,7 @@ export class AuthService {
       email: user.email,
       sub: user.id,
       artisanId: user.artisan?.id || null,
+      role: user.role || 'user',
     };
 
     return {

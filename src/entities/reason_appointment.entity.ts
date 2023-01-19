@@ -1,13 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ArtisanSkill } from './artisan_skill.entity';
 
 @Entity()
 export class ReasonAppointment {
-    @PrimaryGeneratedColumn()
-    @ApiProperty()
-    id: number;
+  @PrimaryGeneratedColumn()
+  @ApiProperty()
+  id: number;
 
-    @Column()
-    @ApiProperty()
-    name: string;
+  @Column()
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty({ type: () => ArtisanSkill })
+  @ManyToOne(() => ArtisanSkill, (artisanSkill) => artisanSkill.reasons)
+  artisanSkill: ArtisanSkill;
 }

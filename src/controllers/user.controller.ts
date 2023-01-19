@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/services/user.service';
@@ -21,6 +22,9 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateUserDto } from 'src/dto/CreateUserDto';
 import { UpdateUserDto } from 'src/dto/UpdateUserDto';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/roles.enum';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('users')
 export class UserController {
@@ -53,7 +57,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @ApiBearerAuth()
   @Get()
   @ApiAcceptedResponse({ isArray: true, type: User })
@@ -65,7 +70,16 @@ export class UserController {
   @ApiBearerAuth()
   @Get(':id')
   @ApiAcceptedResponse({ type: User })
-  async findOne(@Param('id') id: number): Promise<User | null> {
+  async findOne(
+    @Param('id') id: number,
+    @Request() req: any,
+  ): Promise<User | null> {
+    if (req.user.sub !== id && req.user.role === Role.User) {
+      throw new HttpException(
+        "Vous n'avez pas le droit de faire ça.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
     return await this.userService.findOne(id);
   }
 
@@ -79,7 +93,14 @@ export class UserController {
   async update(
     @Param('id') id: string,
     @Body() user: UpdateUserDto,
+    @Request() req: any,
   ): Promise<string> {
+    if (req.user.sub !== parseInt(id) && req.user.role === Role.User) {
+      throw new HttpException(
+        "Vous n'avez pas le droit de faire ça.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
     try {
       await this.userService.update(parseInt(id), user);
 
@@ -92,7 +113,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Delete(':id')
   @ApiAcceptedResponse({
