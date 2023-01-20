@@ -8,7 +8,7 @@ export class ReasonController {
     constructor(private readonly reasonService: ReasonService) {}
 
     @Post()
-    @ApiCreatedResponse({ description: "Le rendez-vous a été créé avec succès."})
+    @ApiCreatedResponse({ description: "La raison du rendez-vous a été créée avec succès."})
     @ApiBadRequestResponse({ description: "Une erreur s'est produite."})
     async create(@Body() reason: ReasonAppointment): Promise<string> {
         try {
