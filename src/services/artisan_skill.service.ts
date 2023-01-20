@@ -16,10 +16,13 @@ export class ArtisanSkillService {
   }
 
   async findAll(): Promise<ArtisanSkill[]> {
-    return await this.artisanSkill.find();
+    return await this.artisanSkill.find({ relations: ['reasons'] });
   }
 
   async findOne(id: number): Promise<ArtisanSkill | null> {
-    return await this.artisanSkill.findOne({ where: { id } });
+    return await this.artisanSkill.findOne({
+      where: { id },
+      relations: ['reasons'],
+    });
   }
 }
