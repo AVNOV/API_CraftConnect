@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateAppointmentDto } from 'src/dto/CreateAppointmentDto';
+import { UpdateAppointmentDto } from 'src/dto/UpdateAppointmentDto';
 import { Appointment } from 'src/entities/appointment.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Repository } from 'typeorm';
@@ -11,7 +13,7 @@ export class AppointmentService {
     private appointment: Repository<Appointment>,
   ) {}
 
-  async create(appointment: Appointment): Promise<Appointment> {
+  async create(appointment: CreateAppointmentDto): Promise<Appointment> {
     const newAppointment = this.appointment.create(appointment);
     return await this.appointment.save(newAppointment);
   }
@@ -27,7 +29,10 @@ export class AppointmentService {
     });
   }
 
-  async update(id: number, appointment: Appointment): Promise<UpdateResult> {
+  async update(
+    id: number,
+    appointment: UpdateAppointmentDto,
+  ): Promise<UpdateResult> {
     return await this.appointment.update(id, appointment);
   }
 

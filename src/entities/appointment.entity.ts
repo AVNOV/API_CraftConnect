@@ -27,11 +27,11 @@ export class Appointment {
 
   @Column()
   @ApiProperty()
-  adress: string;
+  address: string;
 
   @Column()
   @ApiProperty()
-  day: Date;
+  day: string;
 
   @Column()
   @ApiProperty()
@@ -41,7 +41,7 @@ export class Appointment {
   @ApiProperty()
   status: 'accepted' | 'waiting';
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty()
   description: string;
 

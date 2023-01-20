@@ -18,6 +18,8 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/roles.enum';
+import { CreateAppointmentDto } from 'src/dto/CreateAppointmentDto';
+import { UpdateAppointmentDto } from 'src/dto/UpdateAppointmentDto';
 import { Appointment } from 'src/entities/appointment.entity';
 import { AppointmentService } from 'src/services/appointment.service';
 
@@ -31,7 +33,7 @@ export class AppointmentController {
   @ApiCreatedResponse({ description: 'Le rendez-vous a été créé avec succès.' })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
   async create(
-    @Body() appointment: Appointment,
+    @Body() appointment: CreateAppointmentDto,
   ): Promise<{ message: string; appointment: Appointment }> {
     try {
       const newAppointment = await this.appointmentService.create(appointment);
@@ -74,7 +76,7 @@ export class AppointmentController {
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
   async update(
     @Param('id') id: string,
-    @Body() appointments: Appointment,
+    @Body() appointmentDto: UpdateAppointmentDto,
     @Request() req: any,
   ): Promise<string> {
     const appointment = await this.appointmentService.findOne(parseInt(id));
@@ -89,7 +91,7 @@ export class AppointmentController {
       );
     }
     try {
-      await this.appointmentService.update(parseInt(id), appointments);
+      await this.appointmentService.update(parseInt(id), appointmentDto);
 
       return 'Le rendez-vous a été mis à jour avec succès.';
     } catch (error) {
