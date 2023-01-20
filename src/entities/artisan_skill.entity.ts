@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ReasonAppointment } from './reason_appointment.entity';
 
 @Entity()
 export class ArtisanSkill {
@@ -10,4 +11,8 @@ export class ArtisanSkill {
   @Column()
   @ApiProperty()
   name: string;
+
+  @ApiProperty({ type: ReasonAppointment, isArray: true })
+  @OneToMany(() => ReasonAppointment, (reason) => reason.artisanSkill)
+  reasons: ReasonAppointment[];
 }
