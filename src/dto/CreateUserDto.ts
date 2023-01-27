@@ -31,7 +31,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty()
   phone_number: string;
-
-  @ApiProperty()
-  role: string;
 }
