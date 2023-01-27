@@ -5,6 +5,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/dto/CreateUserDto';
 import { UpdateUserDto } from 'src/dto/UpdateUserDto';
+import { UpdateUserRoleDto } from 'src/dto/UpdateUserRoleDto';
 
 @Injectable()
 export class UserService {
@@ -39,6 +40,10 @@ export class UserService {
   }
 
   async update(id: number, user: UpdateUserDto): Promise<UpdateResult> {
+    return await this.user.update(id, user);
+  }
+
+  async updateRole(id: number, user: UpdateUserRoleDto): Promise<UpdateResult> {
     return await this.user.update(id, user);
   }
 

@@ -25,6 +25,7 @@ import { UpdateUserDto } from 'src/dto/UpdateUserDto';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/roles.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UpdateUserRoleDto } from 'src/dto/UpdateUserRoleDto';
 
 @Controller('users')
 export class UserController {
@@ -40,7 +41,7 @@ export class UserController {
       const newUser = await this.userService.create(user);
 
       return {
-        message: "L'utilisateur a été mis à jour avec succès.",
+        message: "L'utilisateur a été créé avec succès.",
         user: newUser,
       };
     } catch (error) {
@@ -105,6 +106,30 @@ export class UserController {
       await this.userService.update(parseInt(id), user);
 
       return "L'utilisateur a été mis à jour avec succès.";
+    } catch (error) {
+      throw new HttpException(
+        "Une erreur s'est produite.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
+  @Patch('/roles/:id')
+  @ApiAcceptedResponse({
+    description: "Le rôle de l'utilisateur a été mis à jour avec succès.",
+  })
+  @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
+  async updateRole(
+    @Param('id') id: string,
+    @Body() user: UpdateUserRoleDto,
+  ): Promise<string> {
+    try {
+      await this.userService.updateRole(parseInt(id), user);
+
+      return "Le rôle de l'utilisateur a été mis à jour avec succès.";
     } catch (error) {
       throw new HttpException(
         "Une erreur s'est produite.",
