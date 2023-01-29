@@ -57,8 +57,8 @@ export class ArtisanController {
 
   @Get(':id')
   @ApiAcceptedResponse({ type: Artisan })
-  async findOne(@Param('id') id: number): Promise<Artisan | null> {
-    return await this.artisanService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Artisan | null> {
+    return await this.artisanService.findOne(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -97,15 +97,15 @@ export class ArtisanController {
     description: "L'artisan a été supprimé avec succès.",
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async delete(@Param('id') id: number, @Request() req: any): Promise<string> {
-    if (req.user.artisanId !== id && req.user.role === Role.User) {
+  async delete(@Param('id') id: string, @Request() req: any): Promise<string> {
+    if (req.user.artisanId !== parseInt(id) && req.user.role === Role.User) {
       throw new HttpException(
         "Vous n'avez pas le droit de faire ça.",
         HttpStatus.FORBIDDEN,
       );
     }
     try {
-      await this.artisanService.delete(id);
+      await this.artisanService.delete(parseInt(id));
 
       return "L'artisan a été supprimé avec succès.";
     } catch (error) {
