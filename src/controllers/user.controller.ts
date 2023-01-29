@@ -72,16 +72,16 @@ export class UserController {
   @Get(':id')
   @ApiAcceptedResponse({ type: User })
   async findOne(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Request() req: any,
   ): Promise<User | null> {
-    if (req.user.sub !== id && req.user.role === Role.User) {
+    if (req.user.id !== parseInt(id) && req.user.role === Role.User) {
       throw new HttpException(
         "Vous n'avez pas le droit de faire ça.",
         HttpStatus.FORBIDDEN,
       );
     }
-    return await this.userService.findOne(id);
+    return await this.userService.findOne(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -96,7 +96,7 @@ export class UserController {
     @Body() user: UpdateUserDto,
     @Request() req: any,
   ): Promise<string> {
-    if (req.user.sub !== parseInt(id) && req.user.role === Role.User) {
+    if (req.user.id !== parseInt(id) && req.user.role === Role.User) {
       throw new HttpException(
         "Vous n'avez pas le droit de faire ça.",
         HttpStatus.FORBIDDEN,
@@ -138,17 +138,22 @@ export class UserController {
     }
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
   @ApiAcceptedResponse({
     description: "L'utilisateur a été supprimé avec succès.",
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async delete(@Param('id') id: number): Promise<string> {
+  async delete(@Param('id') id: string, @Request() req: any): Promise<string> {
+    if (req.user.id !== parseInt(id) && req.user.role === Role.User) {
+      throw new HttpException(
+        "Vous n'avez pas le droit de faire ça.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
     try {
-      await this.userService.delete(id);
+      await this.userService.delete(parseInt(id));
 
       return "L'utilisateur a été supprimé avec succès.";
     } catch (error) {

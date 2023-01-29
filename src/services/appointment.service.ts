@@ -22,6 +22,16 @@ export class AppointmentService {
     return await this.appointment.find({ relations: ['artisan', 'client'] });
   }
 
+  async findByUserOrArtisanId(
+    userId = null,
+    artisanId = null,
+  ): Promise<Appointment[]> {
+    return await this.appointment.find({
+      where: { client: { id: userId }, artisan: { id: artisanId } },
+      relations: ['artisan', 'client'],
+    });
+  }
+
   async findOne(id: number): Promise<Appointment | null> {
     return await this.appointment.findOne({
       where: { id },

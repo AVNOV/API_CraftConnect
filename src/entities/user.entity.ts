@@ -44,7 +44,7 @@ export class User {
   role: string;
 
   @ApiProperty()
-  @OneToOne(() => Artisan)
+  @OneToOne(() => Artisan, (artisan) => artisan.user)
   @JoinColumn()
   artisan: Artisan;
 
