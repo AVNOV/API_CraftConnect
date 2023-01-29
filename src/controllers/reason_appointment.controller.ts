@@ -61,8 +61,8 @@ export class ReasonController {
 
   @Get('id')
   @ApiAcceptedResponse({ type: ReasonAppointment })
-  async findOne(@Param('id') id: number): Promise<ReasonAppointment | null> {
-    return await this.reasonService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ReasonAppointment | null> {
+    return await this.reasonService.findOne(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -97,9 +97,9 @@ export class ReasonController {
     description: 'Raison supprimée avec succès.',
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async delete(@Param('id') id: number): Promise<string> {
+  async delete(@Param('id') id: string): Promise<string> {
     try {
-      await this.reasonService.delete(id);
+      await this.reasonService.delete(parseInt(id));
 
       return 'Raison supprimée avec succès.';
     } catch (error) {

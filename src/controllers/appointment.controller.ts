@@ -50,21 +50,30 @@ export class AppointmentController {
     }
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
   @ApiAcceptedResponse({ isArray: true, type: Appointment })
-  async findAll(): Promise<Appointment[]> {
-    return await this.appointmentService.findAll();
+  async findAll(@Request() req: any): Promise<Appointment[]> {
+    if (req.user.role === Role.Admin) {
+      return await this.appointmentService.findAll();
+    } else {
+      const userId = req.user.id;
+      const artisanId = req.user.artisanId;
+
+      return await this.appointmentService.findByUserOrArtisanId(
+        userId,
+        artisanId,
+      );
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('id')
   @ApiAcceptedResponse({ type: Appointment })
-  async findOne(@Param('id') id: number): Promise<Appointment | null> {
-    return await this.appointmentService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Appointment | null> {
+    return await this.appointmentService.findOne(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -109,8 +118,8 @@ export class AppointmentController {
     description: 'Le rendez-vous a été supprimé avec succès.',
   })
   @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
-  async delete(@Param('id') id: number, @Request() req: any): Promise<string> {
-    const appointment = await this.appointmentService.findOne(id);
+  async delete(@Param('id') id: string, @Request() req: any): Promise<string> {
+    const appointment = await this.appointmentService.findOne(parseInt(id));
     if (
       req.user.id !== appointment.client &&
       req.user.artisanId !== appointment.artisan &&
@@ -122,7 +131,7 @@ export class AppointmentController {
       );
     }
     try {
-      await this.appointmentService.delete(id);
+      await this.appointmentService.delete(parseInt(id));
 
       return 'Le rendez-vous a été supprimé avec succès.';
     } catch (error) {

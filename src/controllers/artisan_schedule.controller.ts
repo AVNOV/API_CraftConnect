@@ -71,8 +71,8 @@ export class ArtisanScheduleController {
 
   @Get(':id')
   @ApiAcceptedResponse({ type: ArtisanSchedule })
-  async findOne(@Param('id') id: number): Promise<ArtisanSchedule | null> {
-    return await this.artisanScheduleService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ArtisanSchedule | null> {
+    return await this.artisanScheduleService.findOne(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard)

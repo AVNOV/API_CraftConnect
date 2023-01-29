@@ -59,7 +59,7 @@ export class ArtisanSkillController {
 
   @Get(':id')
   @ApiAcceptedResponse({ type: ArtisanSkill })
-  async findOne(@Param('id') id: number): Promise<ArtisanSkill | null> {
-    return await this.artisanSkillService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ArtisanSkill | null> {
+    return await this.artisanSkillService.findOne(parseInt(id));
   }
 }
