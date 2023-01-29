@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { Artisan } from 'src/entities/artisan.entity';
 
 export class UpdateUserDto {
   @IsString()
@@ -26,4 +27,9 @@ export class UpdateUserDto {
   @IsOptional()
   @ApiProperty({ required: false })
   phone_number: string;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({ required: false, type: 'number' })
+  artisan: Artisan;
 }
