@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -21,12 +22,12 @@ export class Artisan {
   company_name: string;
 
   @ApiProperty()
-  @OneToOne(() => ArtisanSchedule)
+  @ManyToOne(() => ArtisanSchedule)
   @JoinColumn()
   artisanSchedule: ArtisanSchedule;
 
   @ApiProperty()
-  @OneToOne(() => ArtisanSkill)
+  @ManyToOne(() => ArtisanSkill)
   @JoinColumn()
   artisanSkill: ArtisanSkill;
 
