@@ -32,6 +32,10 @@ export class AppointmentService {
     });
   }
 
+  async findByArtisanId(id: number) {
+    return await this.appointment.find({ where: { artisan: { id } } });
+  }
+
   async findOne(id: number): Promise<Appointment | null> {
     return await this.appointment.findOne({
       where: { id },
