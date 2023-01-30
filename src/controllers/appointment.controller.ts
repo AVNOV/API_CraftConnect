@@ -14,9 +14,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/roles.enum';
 import { CreateAppointmentDto } from 'src/dto/CreateAppointmentDto';
 import { UpdateAppointmentDto } from 'src/dto/UpdateAppointmentDto';
@@ -70,7 +68,17 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Get('id')
+  @Get('/artisans/:id')
+  @ApiAcceptedResponse({ isArray: true, type: Appointment })
+  async findAllAppointmentsOfArtisan(
+    @Param('id') id: string,
+  ): Promise<Appointment[]> {
+    return await this.appointmentService.findByArtisanId(parseInt(id));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':id')
   @ApiAcceptedResponse({ type: Appointment })
   async findOne(@Param('id') id: string): Promise<Appointment | null> {
     return await this.appointmentService.findOne(parseInt(id));
