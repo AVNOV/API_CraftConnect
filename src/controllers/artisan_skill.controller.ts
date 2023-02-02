@@ -58,10 +58,10 @@ export class ArtisanSkillController {
     return await this.artisanSkillService.findAll();
   }
 
-  @Get(':id')
+  @Get(':name')
   @ApiAcceptedResponse({ type: ArtisanSkill })
-  async findOne(@Param('id') id: string): Promise<ArtisanSkill | null> {
-    return await this.artisanSkillService.findOne(parseInt(id));
+  async findOne(@Param('name') name: string): Promise<ArtisanSkill | null> {
+    return await this.artisanSkillService.findOne(name);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

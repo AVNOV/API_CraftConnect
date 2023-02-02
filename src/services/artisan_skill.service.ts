@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtisanSkill } from 'src/entities/artisan_skill.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class ArtisanSkillService {
@@ -21,9 +21,9 @@ export class ArtisanSkillService {
     });
   }
 
-  async findOne(id: number): Promise<ArtisanSkill | null> {
+  async findOne(name: string): Promise<ArtisanSkill | null> {
     return await this.artisanSkill.findOne({
-      where: { id },
+      where: { name: Like(`%${name}%`) },
       relations: ['reasons', 'artisans.user'],
     });
   }
