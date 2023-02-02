@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtisanSkill } from 'src/entities/artisan_skill.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class ArtisanSkillService {
@@ -16,13 +16,24 @@ export class ArtisanSkillService {
   }
 
   async findAll(): Promise<ArtisanSkill[]> {
-    return await this.artisanSkill.find({ relations: ['reasons'] });
+    return await this.artisanSkill.find({
+      relations: ['reasons', 'artisans.user'],
+    });
   }
 
-  async findOne(id: number): Promise<ArtisanSkill | null> {
+  async findOne(name: string): Promise<ArtisanSkill | null> {
     return await this.artisanSkill.findOne({
-      where: { id },
-      relations: ['reasons'],
+      where: { name: Like(`%${name}%`) },
+      relations: [
+        'reasons',
+        'artisans.user',
+        'artisans.artisanSchedule',
+        'artisans.artisanSkill',
+      ],
     });
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    return await this.artisanSkill.delete(id);
   }
 }

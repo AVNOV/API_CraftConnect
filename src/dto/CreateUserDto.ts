@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
+import { Artisan } from 'src/entities/artisan.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -31,4 +39,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty()
   phone_number: string;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({ required: false, type: 'number' })
+  artisan: Artisan;
 }

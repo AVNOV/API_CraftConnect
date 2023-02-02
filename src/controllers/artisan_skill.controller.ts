@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -57,9 +58,30 @@ export class ArtisanSkillController {
     return await this.artisanSkillService.findAll();
   }
 
-  @Get(':id')
+  @Get(':name')
   @ApiAcceptedResponse({ type: ArtisanSkill })
-  async findOne(@Param('id') id: string): Promise<ArtisanSkill | null> {
-    return await this.artisanSkillService.findOne(parseInt(id));
+  async findOne(@Param('name') name: string): Promise<ArtisanSkill | null> {
+    return await this.artisanSkillService.findOne(name);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
+  @Delete(':id')
+  @ApiAcceptedResponse({
+    description: "Le type d'artisan a été supprimé avec succès.",
+  })
+  @ApiBadRequestResponse({ description: "Une erreur s'est produite." })
+  async delete(@Param('id') id: string): Promise<string> {
+    try {
+      await this.artisanSkillService.delete(parseInt(id));
+
+      return "Le type d'artisan a été supprimé avec succès/";
+    } catch (error) {
+      throw new HttpException(
+        "Une erreur s'est produite.",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
