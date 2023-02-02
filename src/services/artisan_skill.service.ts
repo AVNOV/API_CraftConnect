@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtisanSkill } from 'src/entities/artisan_skill.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
 export class ArtisanSkillService {
@@ -24,5 +24,9 @@ export class ArtisanSkillService {
       where: { id },
       relations: ['reasons'],
     });
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    return await this.artisanSkill.delete(id);
   }
 }
