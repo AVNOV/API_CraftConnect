@@ -24,7 +24,12 @@ export class ArtisanSkillService {
   async findOne(name: string): Promise<ArtisanSkill | null> {
     return await this.artisanSkill.findOne({
       where: { name: Like(`%${name}%`) },
-      relations: ['reasons', 'artisans.user'],
+      relations: [
+        'reasons',
+        'artisans.user',
+        'artisans.artisanSchedule',
+        'artisans.artisanSkill',
+      ],
     });
   }
 
