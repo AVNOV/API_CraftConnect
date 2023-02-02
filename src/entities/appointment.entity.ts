@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -16,12 +16,12 @@ export class Appointment {
   id: number;
 
   @ApiProperty({ type: User })
-  @ManyToOne(() => User)
+  @OneToOne(() => User)
   @JoinColumn()
   client: User;
 
   @ApiProperty({ type: Artisan })
-  @ManyToOne(() => Artisan)
+  @OneToOne(() => Artisan)
   @JoinColumn()
   artisan: Artisan;
 
