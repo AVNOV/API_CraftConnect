@@ -129,8 +129,8 @@ export class AppointmentController {
   async delete(@Param('id') id: string, @Request() req: any): Promise<string> {
     const appointment = await this.appointmentService.findOne(parseInt(id));
     if (
-      req.user.id !== appointment.client &&
-      req.user.artisanId !== appointment.artisan &&
+      req.user.id !== appointment.client.id &&
+      req.user.artisanId !== appointment.artisan.id &&
       req.user.role === Role.User
     ) {
       throw new HttpException(
